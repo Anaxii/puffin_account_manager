@@ -42,3 +42,8 @@ type Config struct {
 	Port       string `json:"port"`
 	MongoDbURI string `json:"mongo_db_uri"`
 }
+
+type ClientUsers struct {
+	User   string `json:"user"`
+	Client int    `json:"client"`
+}

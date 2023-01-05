@@ -10,7 +10,7 @@ func (m *Manager) startTicker() {
 	requestsTicker := ticker(m.Interval)
 	for {
 		<-requestsTicker.C
-		verifyUserStatuses()
+		m.verifyUsers()
 		requestsTicker = ticker(m.Interval)
 	}
 }
