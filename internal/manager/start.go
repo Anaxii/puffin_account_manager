@@ -22,7 +22,6 @@ func StartManager() {
 		Interval: 60,
 		DB: database.Database{DBURI: c.MongoDbURI},
 	}
-	m.verifyUsers()
 
-	m.startTicker()
+	m.startVerificationTimer()
 }

@@ -8,25 +8,27 @@ import (
 	"puffin_account_manager/pkg/abi"
 )
 
-func GetTier(walletAddress string, contractAddress string, rpcurl string, chainID *big.Int) (int64, bool) {
+func GetTier(walletAddress string, contractAddress string, rpcurl string) (int64, bool, error) {
 
 	conn, err := ethclient.Dial(rpcurl)
 	if err != nil {
 		log.WithFields(log.Fields{"error": err.Error(), "file": "Blockchain:CheckIfIsApproved"}).Error("Failed to connect to the Ethereum client")
+		return 0, false, err
 	}
 
 	core, err := abi.NewPuffinStatus(common.HexToAddress(contractAddress), conn)
 	if err != nil {
 		log.WithFields(log.Fields{"error": err.Error(), "file": "Blockchain:CheckIfIsApproved"}).Error("Failed to instantiate PuffinApprovedAccounts contract")
+		return 0, false, err
 	}
 
 	tier, isKYC, err := core.Status(nil, common.HexToAddress(walletAddress))
 	if err != nil {
 		log.WithFields(log.Fields{"error": err.Error(), "file": "Blockchain:CheckIfIsApproved"}).Error("Failed to check if user is approved")
-		return 0, false
+		return 0, false, err
 	}
 
-	return tier.Int64(), isKYC
+	return tier.Int64(), isKYC, err
 }
 
 func SetTier(walletAddress string, tier *big.Int, contractAddress string, rpcurl string, chainID *big.Int, privateKey string) error {
