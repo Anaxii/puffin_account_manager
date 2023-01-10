@@ -35,7 +35,8 @@ func (d *Database) GetClients() ([]global.ClientSettings, error) {
 		var result global.ClientSettings
 		err := cur.Decode(&result)
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
+			continue
 		}
 
 		results = append(results, result)
@@ -71,4 +72,33 @@ func (d *Database) GetClientUsers(clientUUID int) ([]global.ClientUsers, error) 
 	}
 
 	return results, nil
+}
+
+func (d *Database) GetUserClients(user string) (map[int]bool, error) {
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(d.DBURI))
+	if err != nil {
+		log.WithFields(log.Fields{"error": err.Error(), "file": "Database:CheckIfExists"}).Error("Failed to connect to mongodb client")
+		return map[int]bool{}, err
+	}
+	defer client.Disconnect(ctx)
+
+	requestsCollection := client.Database("puffin_clients").Collection("users")
+	cur, err := requestsCollection.Find(context.TODO(), bson.D{{"user", user}})
+	if err != nil {
+		log.Error(err)
+	}
+
+	clients := map[int]bool{}
+	for cur.Next(context.TODO()) {
+		var result global.ClientUsers
+		err := cur.Decode(&result)
+		if err != nil {
+			log.Fatal(err)
+		}
+
+		clients[result.Client] = true
+	}
+
+	return clients, nil
 }

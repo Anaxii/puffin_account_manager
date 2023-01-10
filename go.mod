@@ -8,6 +8,8 @@ require (
 )
 
 require (
+	github.com/gorilla/mux v1.8.0
+	github.com/rs/cors v1.7.0
 	go.mongodb.org/mongo-driver v1.11.1
 	golang.org/x/crypto v0.0.0-20220622213112-05595931fe9d
 )
