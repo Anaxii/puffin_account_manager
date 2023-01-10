@@ -102,3 +102,51 @@ func (d *Database) GetUserClients(user string) (map[int]bool, error) {
 
 	return clients, nil
 }
+
+func (d *Database) AddClientUser(c global.ClientUsers) error {
+
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(d.DBURI))
+	if err != nil {
+		return err
+	}
+	defer client.Disconnect(ctx)
+
+	clientSettings := client.Database("puffin_clients").Collection("users")
+	_, err = clientSettings.InsertOne(context.TODO(), c)
+
+	return err
+}
+
+func (d *Database) DeleteUser(user string, id int) error {
+
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(d.DBURI))
+	if err != nil {
+		return err
+	}
+	defer client.Disconnect(ctx)
+
+	clientSettings := client.Database("puffin_clients").Collection("users")
+	_, err = clientSettings.DeleteOne(context.TODO(), bson.D{{"user", user},  {"client", id}})
+	return err
+}
+
+func (d *Database) GetUser(u string) (global.Account, error) {
+
+	ctx, _ := context.WithTimeout(context.Background(), 10*time.Second)
+	client, err := mongo.Connect(context.TODO(), options.Client().ApplyURI(d.DBURI))
+	if err != nil {
+		return global.Account{}, err
+	}
+	defer client.Disconnect(ctx)
+
+	clientSettings := client.Database("puffin").Collection("accounts")
+	res := clientSettings.FindOne(context.TODO(), bson.D{{"wallet_address", u}}, nil)
+	var result global.Account
+	err = res.Decode(&result)
+	if err != nil {
+		return global.Account{}, err
+	}
+	return result, err
+}
