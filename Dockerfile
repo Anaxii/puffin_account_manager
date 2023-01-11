@@ -9,4 +9,4 @@ RUN go mod tidy
 
 EXPOSE 8080
 
-CMD go run ./src/cmd/main
+CMD go run ./cmd/main
