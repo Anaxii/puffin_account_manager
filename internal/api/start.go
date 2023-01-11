@@ -21,8 +21,8 @@ func StartAPI(port string, _db database.Database) {
 
 	r := mux.NewRouter().StrictSlash(true)
 
-	r.HandleFunc("/client/all", getAllClients).Methods("GET")
-	r.HandleFunc("/client/join", joinClient).Methods("GET")
+	r.HandleFunc("/users/client/all", getAllClients).Methods("GET")
+	r.HandleFunc("/users/client/join", joinClient).Methods("GET")
 	r.Use(mux.CORSMethodMiddleware(r))
 	log.Info(fmt.Sprintf("API listening on port %v", port))
 	log.Fatal(http.ListenAndServe(":"+port, c.Handler(r)))
