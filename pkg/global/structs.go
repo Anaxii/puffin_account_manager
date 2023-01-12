@@ -19,7 +19,6 @@ type ClientSettings struct {
 	TeamSize                    int                `json:"team_size" bson:"team_size"`
 	ProjectCommunicationChannel string             `json:"project_communication_channel" bson:"project_communication_channel"`
 	ProjectWebsite              string             `json:"project_website" bson:"project_website"`
-	DappName                    string             `json:"dapp_name" bson:"dapp_name"`
 	RPCURL                      string             `json:"rpc_url" bson:"rpc_url"`
 	GasTokenSymbol              string             `json:"gas_token_symbol" bson:"gas_token_symbol"`
 	ChainID                     int64              `json:"chain_id" bson:"chain_id"`
