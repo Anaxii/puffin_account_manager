@@ -141,7 +141,7 @@ func (d *Database) GetUser(u string) (global.Account, error) {
 	}
 	defer client.Disconnect(ctx)
 
-	clientSettings := client.Database("puffin").Collection("accounts")
+	clientSettings := client.Database("puffin").Collection("account_requests")
 	res := clientSettings.FindOne(context.TODO(), bson.D{{"wallet_address", u}}, nil)
 	var result global.Account
 	err = res.Decode(&result)
