@@ -22,7 +22,7 @@ func (m *Manager) verifyUsers(clients []global.ClientSettings) error {
 					continue
 				}
 				for u, t := range toSet {
-					_ = blockchain.SetTier(u, big.NewInt(t), c.PuffinGeoAddress, c.RPCURL, big.NewInt(c.ChainID), m.Config.PrivateKey)
+					_ = blockchain.SetTier(u, big.NewInt(t), true, c.PuffinGeoAddress, c.RPCURL, big.NewInt(c.ChainID), m.Config.PrivateKey)
 				}
 			} else if product == "kyc" {
 				if c.PuffinGeoAddress != "" || c.PuffinKYCAddress == "" {
@@ -36,9 +36,9 @@ func (m *Manager) verifyUsers(clients []global.ClientSettings) error {
 				}
 				for u, t := range toSet {
 					if t == 0 {
-						_ = blockchain.SetTier(u, big.NewInt(t), c.PuffinGeoAddress, c.RPCURL, big.NewInt(c.ChainID), m.Config.PrivateKey)
+						_ = blockchain.SetTier(u, big.NewInt(t), true, c.PuffinGeoAddress, c.RPCURL, big.NewInt(c.ChainID), m.Config.PrivateKey)
 					} else if t == 1 {
-						_ = blockchain.RemoveUser(u, c.PuffinGeoAddress, c.RPCURL, big.NewInt(c.ChainID), m.Config.PrivateKey)
+						_ = blockchain.SetTier(u, big.NewInt(0), false, c.PuffinGeoAddress, c.RPCURL, big.NewInt(c.ChainID), m.Config.PrivateKey)
 					}
 				}
 			}

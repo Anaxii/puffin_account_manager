@@ -16,7 +16,7 @@ func GetTier(walletAddress string, contractAddress string, rpcurl string) (int64
 		return 0, false, err
 	}
 
-	core, err := abi.NewPuffinStatus(common.HexToAddress(contractAddress), conn)
+	core, err := abi.NewPuffinUsers(common.HexToAddress(contractAddress), conn)
 	if err != nil {
 		log.WithFields(log.Fields{"error": err.Error(), "file": "Blockchain:CheckIfIsApproved"}).Error("Failed to instantiate PuffinApprovedAccounts contract")
 		return 0, false, err
@@ -31,7 +31,7 @@ func GetTier(walletAddress string, contractAddress string, rpcurl string) (int64
 	return tier.Int64(), isKYC, err
 }
 
-func SetTier(walletAddress string, tier *big.Int, contractAddress string, rpcurl string, chainID *big.Int, privateKey string) error {
+func SetTier(walletAddress string, tier *big.Int, status bool, contractAddress string, rpcurl string, chainID *big.Int, privateKey string) error {
 
 	conn, auth, err := getAuth(rpcurl, chainID, privateKey)
 	if err != nil {
@@ -39,13 +39,13 @@ func SetTier(walletAddress string, tier *big.Int, contractAddress string, rpcurl
 		return err
 	}
 
-	verify, err := abi.NewPuffinStatus(common.HexToAddress(contractAddress), conn)
+	verify, err := abi.NewPuffinUsers(common.HexToAddress(contractAddress), conn)
 	if err != nil {
 		log.WithFields(log.Fields{"error": err.Error(), "file": "Blockchain:EnableOnPuffin"}).Error("Failed to initialize AllowListInterface")
 		return err
 	}
 
-	_, err = verify.SetStatus(auth, common.HexToAddress(walletAddress), tier)
+	_, err = verify.SetStatus(auth, common.HexToAddress(walletAddress), status, tier)
 	if err != nil {
 		log.WithFields(log.Fields{"error": err.Error(), "file": "Blockchain:EnableOnPuffin"}).Error("Failed to call SetEnabled")
 		return err
@@ -54,25 +54,4 @@ func SetTier(walletAddress string, tier *big.Int, contractAddress string, rpcurl
 	return nil
 }
 
-func RemoveUser(walletAddress string, contractAddress string, rpcurl string, chainID *big.Int, privateKey string) error {
 
-	conn, auth, err := getAuth(rpcurl, chainID, privateKey)
-	if err != nil {
-		log.WithFields(log.Fields{"error": err.Error(), "file": "Blockchain:EnableOnPuffin"}).Error("Failed to get auth")
-		return err
-	}
-
-	verify, err := abi.NewPuffinStatus(common.HexToAddress(contractAddress), conn)
-	if err != nil {
-		log.WithFields(log.Fields{"error": err.Error(), "file": "Blockchain:EnableOnPuffin"}).Error("Failed to initialize AllowListInterface")
-		return err
-	}
-
-	_, err = verify.RemoveUser(auth, common.HexToAddress(walletAddress))
-	if err != nil {
-		log.WithFields(log.Fields{"error": err.Error(), "file": "Blockchain:EnableOnPuffin"}).Error("Failed to call SetEnabled")
-		return err
-	}
-
-	return nil
-}
