@@ -12,9 +12,13 @@ import (
 func (m *Manager) verifyUsers(clients []global.ClientSettings) error {
 	for _, c := range clients {
 		for _, product := range c.PackageOptions {
-			if product == "geo_block" {
+			if product == "geo_block" || product == "geo" {
 				if c.PuffinGeoAddress == "" {
-					continue
+					if c.PuffinKYCAddress != "" {
+						c.PuffinGeoAddress = c.PuffinKYCAddress
+					} else {
+						continue
+					}
 				}
 				toSet, err := m.handleGeoBlock(c)
 				if err != nil {

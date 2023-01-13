@@ -21,7 +21,7 @@ func StartManager() {
 	d := database.Database{DBURI: c.MongoDbURI}
 	m := Manager{
 		Config:   c,
-		Interval: 60,
+		Interval: 3,
 		DB: d,
 	}
 

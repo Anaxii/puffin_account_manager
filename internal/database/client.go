@@ -65,7 +65,7 @@ func (d *Database) GetClientUsers(clientUUID int) ([]global.ClientUsers, error) 
 		var result global.ClientUsers
 		err := cur.Decode(&result)
 		if err != nil {
-			log.Fatal(err)
+			log.Error(err)
 		}
 
 		results = append(results, result)
